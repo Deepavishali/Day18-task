@@ -18,14 +18,7 @@ fetch(url).then((res)=>res.json()).then((data)=>{
 })
 
 let template=(country)=>{
-    // try{
-    //    if(country.capital[0]!="") throw country.capital[0]
-    // }catch(err){
-    //     console.log('deepak');
-    // }
-
-
-let temp=`
+   let temp=`
 
         <!-- CARD -->
         
@@ -67,8 +60,7 @@ let weatherBtn=(lan,name)=>{
         Wind speed  :  ${data.wind.speed}
         Temperature :  ${data.main.temp} 
         `;
-        
-        //we are going to show weather report via alert.
+        //The output will be displayed through alert
         alert(weatherMsg);
         l.innerHTML="";
     })
