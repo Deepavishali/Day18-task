@@ -1,67 +1,99 @@
-//Target an element
-let  row=document.querySelector(".row");
-let btn=document.querySelector("btn");
+let searchBtn = document.getElementById("search-btn");                      
+let countryInput = document.getElementById("country-inp");
 
-// calling api
-let url="https://restcountries.com/v3.1/all"
-fetch(url).then((res)=>res.json()).then((data)=>{
-    data.forEach(element => {
+searchBtn.addEventListener("click",()=>{
+  let countryWeather = countryInput.value;                            //storing the  input value
+  let countryName =    countryInput.value;
+  let url = `https://api.openweathermap.org/data/2.5/weather?q=${countryWeather}&appid=7de53c6f56f52faa22d7fbe1351e958e`  //connected two url by the API id
+  let url1=`https://restcountries.com/v3.1/name/${countryName}?fullText=true`
+  // Fetch the url with the input value given in the template literals//
+ console.log(url)
+  console.log(url1);
+  fetch(url)
+.then((data1)=> data1.json())
+.then((data2)=>{
+console.log(data2["main"])                                                  //The below details where displayed in the div tag with id name called output1.
+output1.innerHTML=`                                                     
+<h4><b><u>WEATHER REPORT</b></u></h4><br><br>
 
-    let div=document.createElement("div");
-    // div.className="col-sm-4 col-1g-4 alert alert-primary"
-    div.className="col-sm-6 col-md-4 col-lg-4 col-xl-4"
-    let fileLoad=   template(element);
-    div.innerHTML=fileLoad;
-    row.appendChild(div)
-});
+<div class="wrapper">
+<div class="data-wrapper">
+<h4>TEMPERATURE:<h4>
+<span>${data2["main"].temp}<span>
+</div>
+</div>
 
+<div class="wrapper">
+<div class="data-wrapper">
+<h4>MINIMUM TEMPERATURE:<h4>
+<span>${data2["main"].temp_min}<span>
+</div>
+</div>
+
+<div class="wrapper">
+<div class="data-wrapper">
+<h4>MAXIMUM TEMPERATURE:<h4>
+<span>${data2["main"].temp_max}<span>
+</div>
+</div>
+
+<div class="wrapper">
+<div class="data-wrapper">
+<h4>PRESSURE:<h4>
+<span>${data2["main"].pressure}<span>
+</div>
+</div>
+
+<div class="wrapper">
+<div class="data-wrapper">
+<h4>HUMIDITY:<h4>
+<span>${data2["main"].humidity}<span>
+</div>
+</div>`
 })
 
-let template=(country)=>{
-   let temp=`
 
-        <!-- CARD -->
-        
-            <div class="card h-100" >
-                <div class="card-header">${country.name.common}</div>
-                <div class="card-body">
-                    <img class="flag1"f src="${country.flags.png}" alt="">
-                    <div class=align><br>
-                    <p class="card-text"><b>Capital:</b>${country.capital}</p>
-                    <p class="card-text"><b>Region :</b>${country.region}</p>
-                    <p class="card-text"><b>Country Code :</b> ${(country.fifa!=undefined)?country.fifa:country.cca3}</p>
-                    <p class="card-text"><b>Population :</b> ${(country.population)}</p>
-                    <br></div>
-                    <button class="btn btn-primary" onclick="weatherBtn([${country.latlng[0]},${country.latlng[1]}],'${country.name.common}')">weather</button>
-                    <p id="load${country.name.common}"></p>
-                    </div>
-                    </div><br>
-                    `;        
-                    
-        
-        return temp
-}        
-//to show weather message
-let weatherBtn=(lan,name)=>{
-    let [lat,lon]=lan
-    let l=document.getElementById(`load${name}`)
-    l.innerHTML="...Loading...please wait...";
-    //fetching weather api
-    let url=`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=9bf59c67c0d408cc5e1c4877f3e4d9d5`
-    fetch(url).then((res)=>res.json()).then((data)=>{
-        
-        
-        //weather msg template
-        let weatherMsg=`
-        Country     :  ${data.name}
-        Latiture    :  ${lat}  
-        Longiture   :  ${lon}
-        Weather     :  ${data.weather[0].description}
-        Wind speed  :  ${data.wind.speed}
-        Temperature :  ${data.main.temp} 
-        `;
-        //The output will be displayed through alert
-        alert(weatherMsg);
-        l.innerHTML="";
-    })
-}
+fetch(url1)
+.then((Response)=> Response.json())                            //The following details were displayed before the weather report in the id named output
+.then((data)=>{
+   output.innerHTML=`
+    <img src="${data[0].flags.svg}"
+    class="flag-img">
+    <h2>${data[0].name.common}<h2>
+    <div class="wrapper">
+    <div class="data-wrapper">
+    <h4>capital:<h4>
+    <span>${data[0].capital[0]}<span>
+    </div>
+    </div>
+    <div class="wrapper">
+    <div class="data-wrapper">
+    <h4>region:<h4>
+    <span>${data[0].region[0]}<span>
+    </div>
+    </div>
+    <div class="wrapper">
+    <div class="data-wrapper">
+    <h4>postalcode:<h4>
+    <span>${data[0].postalCode.format}<span>
+    </div>
+    </div>
+    <div class="wrapper">
+    <div class="data-wrapper">
+    <h4>Latlng:<h4>
+    <span>${data[0].latlng}<span>
+    </div>
+    </div>`
+
+    
+    
+ 
+}).catch(()=>{                                                          //To handle the errors by displaying the following lines
+  if(countryName.length ==0){
+    output.innerHTML=`<h3>The input field cannot be empty</h3>`
+  }
+  else{
+    output.innerHTML=`<h3>please enter a valid country</h3>`;
+  }
+})
+ });
